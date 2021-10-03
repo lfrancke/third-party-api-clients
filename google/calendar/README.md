@@ -1,6 +1,7 @@
 # `google-calendar`
 
 A fully generated, opinionated API client library for Google Calendar.
+This currently requires unstable Rust due to the use of the [async_stream](https://github.com/rust-lang/rust/issues/79024) feature.
 
 [![docs.rs](https://docs.rs/google-calendar/badge.svg)](https://docs.rs/google-calendar)
 
@@ -45,10 +46,10 @@ google-calendar = "0.1.3"
 Typical use will require intializing a `Client`. This requires
 a user agent string and set of credentials.
 
-```
+```rust
 use google_calendar::Client;
 
-let google calendar = Client::new(
+let google_calendar = Client::new(
     String::from("client-id"),
     String::from("client-secret"),
     String::from("redirect-uri"),
@@ -66,10 +67,10 @@ the client in the environment:
 
 And then you can create a client from the environment.
 
-```
+```rust
 use google_calendar::Client;
 
-let google calendar = Client::new_from_env(
+let google_calendar = Client::new_from_env(
     String::from("token"),
     String::from("refresh-token")
 );
@@ -80,16 +81,16 @@ the initial state of the client, you will not know these values.
 
 To start off a fresh client and get a `token` and `refresh_token`, use the following.
 
-```
+```rust
 use google_calendar::Client;
 
 async fn do_call() {
-    let mut google calendar = Client::new_from_env("", "");
+    let mut google_calendar = Client::new_from_env("", "").await;
 
     // Get the URL to request consent from the user.
     // You can optionally pass in scopes. If none are provided, then the
     // resulting URL will not have any scopes.
-    let user_consent_url = google calendar.user_consent_url(&["some-scope".to_string()]);
+    let user_consent_url = google_calendar.user_consent_url(&["some-scope".to_string()]);
 
     // In your redirect URL capture the code sent and our state.
     // Send it along to the request for the token.
